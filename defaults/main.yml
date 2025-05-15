@@ -1,0 +1,21 @@
+---
+# defaults file for thanos
+thanos_ver: 0.37.0
+thanos_mirror: https://github.com/thanos-io/thanos/releases/download
+thanos_arch_map:
+  aarch64: arm64
+  ppc64le: ppc64le
+  x86_64: amd64
+thanos_parent_install_dir: /usr/local
+
+
+thanos_query: false
+thanos_query_flags: []
+
+
+thanos_rule: false
+thanos_rule_flags: []
+
+
+thanos_sidecar: false
+thanos_sidecar_flags: []

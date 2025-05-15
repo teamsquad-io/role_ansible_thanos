@@ -1,0 +1,15 @@
+[Unit]
+Description=Thanos Query Component
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=thanos
+Group=thanos
+ExecStart={{ thanos_parent_install_dir }}/thanos-{{ thanos_ver }}.linux-amd64/thanos query \
+  {{ thanos_query_flags | map('regex_replace', '^', '--') | join(' ') }}
+Restart=on-failure
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

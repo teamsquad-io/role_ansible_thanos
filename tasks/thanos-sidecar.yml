@@ -1,0 +1,31 @@
+# Asegurarse de que el usuario de Thanos existe
+- name: Ensure thanos system user exists
+  user:
+    name: thanos
+    shell: /usr/sbin/nologin
+    system: yes
+
+# Crear el servicio systemd para Thanos-rule
+- name: Create systemd service for thanos-rule
+  template:
+    src: thanos-sidecar.service.j2
+    dest: /etc/systemd/system/thanos-sidecar.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start thanos-sidecar service
+  systemd:
+    name: thanos-sidecar
+    enabled: yes
+    state: started
+
+- name: Restart thanos-sidecar service to apply changes
+  systemd:
+    name: thanos-sidecar
+    state: restarted
+    enabled: yes

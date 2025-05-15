@@ -1,0 +1,4 @@
+- targets:
+{% for target in thanos_sd_targets %}
+  - {{ target }}
+{% endfor %}

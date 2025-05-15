@@ -1,0 +1,54 @@
+- name: Ensure thanos data dir exists
+  file:
+    path: /var/lib/thanos
+    state: directory
+    owner: thanos
+    group: thanos
+    mode: '0755'
+
+- name: Ensure /etc/thanos exists
+  file:
+    path: /etc/thanos
+    state: directory
+    owner: thanos
+    group: thanos
+    mode: '0755'
+
+- name: Generate Thanos store discovery file
+  template:
+    src: thanos_sd.yaml.j2
+    dest: /etc/thanos/thanos_sd.yaml
+    owner: thanos
+    group: thanos
+    mode: '0644'
+
+
+- name: Ensure thanos system user exists
+  user:
+    name: thanos
+    shell: /usr/sbin/nologin
+    system: yes
+
+- name: Create systemd service for thanos-query
+  template:
+    src: thanos-query.service.j2
+    dest: /etc/systemd/system/thanos-query.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start thanos-query service
+  systemd:
+    name: thanos-query
+    enabled: yes
+    state: started
+
+- name: Restart thanos-query service to apply changes
+  systemd:
+    name: thanos-query
+    state: restarted
+    enabled: yes

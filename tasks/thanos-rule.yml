@@ -1,0 +1,94 @@
+- name: Ensure thanos data dir exists
+  file:
+    path: /var/lib/thanos
+    state: directory
+    owner: thanos
+    group: thanos
+    mode: '0755'
+
+# Asegurarse de que el directorio de reglas existe
+- name: Ensure thanos rules dir exists
+  file:
+    path: /etc/thanos/rules
+    state: directory
+    owner: thanos
+    group: thanos
+    mode: '0755'
+
+# Asegurarse de que el directorio para las reglas de Thanos existe
+- name: Ensure rules directory exists
+  file:
+    path: /etc/thanos/rules
+    state: directory
+    owner: thanos
+    group: thanos
+    mode: '0755'
+
+# Copiar las reglas a la máquina remota
+- name: Copy rule files to remote host
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/thanos/rules/"
+    owner: thanos
+    group: thanos
+    mode: '0644'
+  with_fileglob:
+    - "{{ playbook_dir }}/rules/*.rules.yaml"
+
+# Asegurarse de que el directorio para las reglas de Thanos existe en /var/lib
+- name: Ensure data dir exists for thanos-rule
+  file:
+    path: /var/lib/thanos/rule
+    state: directory
+    owner: thanos
+    group: thanos
+    mode: '0755'
+
+# Asegurarse de que el usuario de Thanos existe
+- name: Ensure thanos system user exists
+  user:
+    name: thanos
+    shell: /usr/sbin/nologin
+    system: yes
+
+# Crear el servicio systemd para Thanos-rule
+- name: Create systemd service for thanos-rule
+  template:
+    src: thanos-rule.service.j2
+    dest: /etc/systemd/system/thanos-rule.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start thanos-rule service
+  systemd:
+    name: thanos-rule
+    enabled: yes
+    state: started
+
+- name: Restart thanos-rule service to apply changes
+  systemd:
+    name: thanos-rule
+    state: restarted
+    enabled: yes
+
+# Asegurarse de que los permisos de los directorios sean correctos
+- name: Ensure correct permissions for /var/lib/thanos
+  file:
+    path: /var/lib/thanos
+    owner: thanos
+    group: thanos
+    mode: '0755'
+    recurse: yes
+
+- name: Ensure correct permissions for /var/lib/thanos/rule
+  file:
+    path: /var/lib/thanos/rule
+    owner: thanos
+    group: thanos
+    mode: '0755'
+    recurse: yes

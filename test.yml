@@ -1,0 +1,13 @@
+---
+- name: Testing andrewrothstein.thanos
+  hosts: all
+  roles:
+    - role: '{{ playbook_dir }}'
+  tasks:
+    - name: Executing 'thanos --version'
+      ansible.builtin.command: thanos --version
+      changed_when: false
+      register: thanos_test_output
+    - name: Output from 'thanos --version'
+      ansible.builtin.debug:
+        msg: '{{ thanos_test_output.stderr }}'
