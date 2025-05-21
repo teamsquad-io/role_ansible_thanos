@@ -1,3 +1,9 @@
+- name: Ensure thanos system user exists
+  user:
+    name: thanos
+    shell: /usr/sbin/nologin
+    system: yes
+
 - name: Ensure thanos data dir exists
   file:
     path: /var/lib/thanos
@@ -21,13 +27,6 @@
     owner: thanos
     group: thanos
     mode: '0644'
-
-
-- name: Ensure thanos system user exists
-  user:
-    name: thanos
-    shell: /usr/sbin/nologin
-    system: yes
 
 - name: Create systemd service for thanos-query
   template:
