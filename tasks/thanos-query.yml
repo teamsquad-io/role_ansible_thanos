@@ -27,6 +27,14 @@
     owner: thanos
     group: thanos
     mode: '0644'
+    
+- name: Copiar configuración HTTP de Thanos con TLS y basic auth
+  template:
+    src: thanos-http-config.yml.j2
+    dest: /etc/thanos/thanos-http-config.yml
+    owner: thanos
+    group: thanos
+    mode: '0644'
 
 - name: Create systemd service for thanos-query
   template:
