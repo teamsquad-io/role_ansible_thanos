@@ -4,6 +4,14 @@
     name: thanos
     shell: /usr/sbin/nologin
     system: yes
+    
+- name: Create Prometheus HTTP client config for Thanos Sidecar
+  template:
+    src: prom-client.yaml.j2
+    dest: /etc/thanos/prom-client.yaml
+    owner: thanos
+    group: thanos
+    mode: '0644'
 
 # Crear el servicio systemd para Thanos-rule
 - name: Create systemd service for thanos-rule
