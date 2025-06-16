@@ -4,6 +4,15 @@
     name: thanos
     shell: /usr/sbin/nologin
     system: yes
+
+- name: Ensure /etc/thanos directory exists
+  file:
+    path: /etc/thanos
+    state: directory
+    owner: thanos
+    group: thanos
+    mode: '0755'
+
     
 - name: Create Prometheus HTTP client config for Thanos Sidecar
   template:
